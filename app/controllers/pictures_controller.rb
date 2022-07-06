@@ -1,6 +1,5 @@
 class PicturesController < ApplicationController
   before_action :set_picture, only: %i[ show edit update destroy ]
-
   # GET /pictures or /pictures.json
   def index
     @pictures = Picture.all
@@ -26,6 +25,7 @@ class PicturesController < ApplicationController
 
   # GET /pictures/1/edit
   def edit
+    ban_deferrent_user
   end
 
   # POST /pictures or /pictures.json
@@ -59,11 +59,14 @@ class PicturesController < ApplicationController
 
   # DELETE /pictures/1 or /pictures/1.json
   def destroy
-    @picture.destroy
+    flag = ban_deferrent_user
+    if flag
+      @picture.destroy
 
-    respond_to do |format|
-      format.html { redirect_to pictures_url, notice: "Picture was successfully destroyed." }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to pictures_url, notice: "Picture was successfully destroyed." }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -71,6 +74,15 @@ class PicturesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_picture
       @picture = Picture.find(params[:id])
+    end
+
+    def ban_deferrent_user
+       unless @picture.user_id == current_user.id
+         redirect_to pictures_path, notice: "Different User"
+         return false
+       else
+         return true
+       end
     end
 
     # Only allow a list of trusted parameters through.

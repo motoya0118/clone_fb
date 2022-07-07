@@ -9,11 +9,6 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
-    <% flash.each do |key, value| %>
-      <%= content_tag(:div, value, class: "#{key}") %>
-    <% end %>
-
 <nav class="navbar navbar-light justify-content-start" style="background-color: #e3f2fd;">
     <% if logged_in? %>
       <%= link_to "Profile", user_path(current_user.id) ,class: "nav-link"%>
@@ -23,6 +18,12 @@
       <%= link_to "Login", new_session_path ,class: "nav-link"%>
     <% end %>
 </nav>
+<body>
+  <% flash.each do |key, value| %>
+    <%= content_tag(:div, value, class: "#{key}") %>
+  <% end %>
+</body>
     <%= yield %>
-  </body>
+
+
 </html>
